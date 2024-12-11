@@ -13,6 +13,12 @@ RUN echo "deb https://mirrors.aliyun.com/debian/ stable main contrib non-free" >
     unzip \
     && rm -rf /var/lib/apt/lists/*
 
+ENV DB_NAME=gaussdb
+ENV DB_USER=dbadmin
+ENV DB_PASSWORD=Audaque@1234
+ENV DB_HOST=192.168.0.91
+ENV DB_PORT=8000
+
 # 使用 wget 下载所需的驱动或文件
 RUN wget -O /tmp/GaussDB_driver.zip https://dbs-download.obs.cn-north-1.myhuaweicloud.com/GaussDB/1730887196055/GaussDB_driver.zip
 

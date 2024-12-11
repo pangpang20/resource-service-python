@@ -15,9 +15,6 @@ class Customer(models.Model):
     class Meta:
         db_table = 'customers'
 
-    def __str__(self):
-        return self.customer_name
-
 
 class Location(models.Model):
     location_id = models.CharField(max_length=255, primary_key=True)
@@ -29,5 +26,64 @@ class Location(models.Model):
         db_table = 'locations'
 
 
-    def __str__(self):
-        return self.location_name
+
+class OrderItem(models.Model):
+    order_item_id = models.CharField(max_length=255, primary_key=True)
+    order_id = models.CharField(max_length=255)
+    product_id = models.CharField(max_length=255)
+    ordered_at = models.DateTimeField()
+    product_name = models.CharField(max_length=255)
+    product_price = models.DecimalField(max_digits=10, decimal_places=2)
+    is_food_item = models.BooleanField()
+    is_drink_item = models.BooleanField()
+    supply_cost = models.DecimalField(max_digits=10, decimal_places=2)
+
+    class Meta:
+        db_table = 'order_items'
+
+class Order(models.Model):
+    order_id = models.CharField(max_length=255, primary_key=True)
+    location_id = models.CharField(max_length=255)
+    customer_id = models.CharField(max_length=255)
+    subtotal_cents = models.IntegerField()
+    tax_paid_cents = models.IntegerField()
+    order_total_cents = models.IntegerField()
+    subtotal = models.DecimalField(max_digits=10, decimal_places=2)
+    tax_paid = models.DecimalField(max_digits=10, decimal_places=2)
+    order_total = models.DecimalField(max_digits=10, decimal_places=2)
+    ordered_at = models.DateTimeField()
+    order_cost = models.DecimalField(max_digits=10, decimal_places=2)
+    order_items_subtotal = models.DecimalField(max_digits=10, decimal_places=2)
+    count_food_items = models.BigIntegerField()
+    count_drink_items = models.BigIntegerField()
+    count_order_items = models.BigIntegerField()
+    is_food_order = models.BooleanField()
+    is_drink_order = models.BooleanField()
+    customer_order_number = models.BigIntegerField()
+
+    class Meta:
+        db_table = 'orders'
+
+class Product(models.Model):
+    product_id = models.CharField(max_length=255, primary_key=True)
+    product_name = models.CharField(max_length=255)
+    product_type = models.CharField(max_length=255)
+    product_description = models.TextField()
+    product_price = models.DecimalField(max_digits=10, decimal_places=2)
+    is_food_item = models.BooleanField()
+    is_drink_item = models.BooleanField()
+
+    class Meta:
+        db_table = 'products'
+
+
+class Supply(models.Model):
+    supply_uuid = models.CharField(max_length=255, primary_key=True)
+    supply_id = models.CharField(max_length=255)
+    product_id = models.CharField(max_length=255)
+    supply_name = models.CharField(max_length=255)
+    supply_cost = models.DecimalField(max_digits=10, decimal_places=2)
+    is_perishable_supply = models.BooleanField()
+
+    class Meta:
+        db_table = 'supplies'

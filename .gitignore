@@ -2,3 +2,4 @@
 *.pyc
 */migrations/*
 gitpush.sh
+settings.py

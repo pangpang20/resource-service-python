@@ -17,18 +17,26 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from django.views.generic import TemplateView
-from django_dws.views import CustomerView, LocationView
+from django_dws.views import CustomerView, LocationView,OrderView,OrderItemView,ProductView,SupplyView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include('django_dws.urls')),
     path('', TemplateView.as_view(template_name='home.html'), name='home'), # 根路径路由，指向首页视图
 
-    # 客户相关的 URL 配置
-    path('customers/', CustomerView.as_view(), name='customer-list'),  # 列出所有客户
-    path('customers/<str:pk>/', CustomerView.as_view(), name='customer-detail'),  # 根据 pk 获取客户详情
+    path('customers/', CustomerView.as_view(), name='customer-list'),
+    path('locations/', LocationView.as_view(), name='locations-list'),
+    path('orders/', OrderView.as_view(), name='orders-list'),
+    path('orderitems/', OrderItemView.as_view(), name='orderitems-list'),
+    path('products/', ProductView.as_view(), name='products-list'),
+    path('supplys/', SupplyView.as_view(), name='supplys-list'),
 
-    # 地址相关的 URL 配置
-    path('locations/', LocationView.as_view(), name='location-list'),  # 列出所有地址
-    path('locations/<str:pk>/', LocationView.as_view(), name='location-detail'),  # 根据 pk 获取地址详情
+
+
+    path('customers/<str:pk>/', CustomerView.as_view(), name='customer-detail'),
+    path('locations/<str:pk>/', LocationView.as_view(), name='location-detail'),
+    path('orders/<str:pk>/', OrderView.as_view(), name='orders-detail'),
+    path('orderitems/<str:pk>/', OrderItemView.as_view(), name='orderitems-detail'),
+    path('products/<str:pk>/', ProductView.as_view(), name='products-detail'),
+    path('supplys/<str:pk>/', SupplyView.as_view(), name='supplys-detail'),
 ]

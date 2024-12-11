@@ -1,7 +1,13 @@
-# DWS+Django Demouom
-此Demo主要使用Django+DWS提供RESTful API功能，方便对项目进行体验或验收使用。
+# DWS+Django Demo
+
+此Demo主要使用Django+DWS提供RESTful API功能。
+此项目依赖条件如下：
+
+1. 拥有DWS集群8.0.0及以上版本
+2. 通过这两个项目初始化数据：[jaffle-shop-gaussdb](https://github.com/pangpang20/jaffle-shop-gaussdb)和[jaffle-shop-dws](https://github.com/pangpang20/jaffle-shop-dws),前一个项目为DWS初始化数据，后一个项目为在DWS加工数据，本项目把最终的结果数据通过Django提供RESTful API给用户使用。
 
 目录结构说明：
+
 ```python
 
 resource-service-python/
@@ -27,17 +33,18 @@ resource-service-python/
     └── wsgi.py
 ```
 
-
 # 安装依赖
+
 ```bash
 pip install --no-cache-dir -r requirements.txt
 pip install gunicorn
 
 ```
 
-
 # 安装华为GaussDB Python驱动
+
 由于开源的psycopg2驱动，不兼容DWS默认密码加密方式，需要使用华为的GaussDB Python驱动。
+
 ```bash
 # 华为云官网获取驱动包
 wget -O /tmp/GaussDB_driver.zip https://dbs-download.obs.cn-north-1.myhuaweicloud.com/GaussDB/1730887196055/GaussDB_driver.zip
@@ -76,21 +83,40 @@ Type "help", "copyright", "credits" or "license" for more information.
 >>> exit()
 ```
 
+# 修改配置文件
+
+复制配置文件`user-service/sample-settings.py`为`user-service/settings.py`将DWS的连接信息your_开头的修改为实际值。
+
+```python
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'your_database',
+        'USER': 'your_username',
+        'PASSWORD': 'your_password',
+        'HOST': 'your_host',
+        'PORT': your_port,
+        'OPTIONS': {
+            'options': '-c search_path=your_schema,public'
+        },
+    }
+}
+```
+
 # 启动服务
 
-
 ```bash
-
+cd resource-service-python
 # 创建迁移
 python manage.py makemigrations django_dws
 
 # 执行迁移
 python manage.py migrate django_dws
 
-# 启动服务，端口为8000
-python manage.py runserver 0.0.0.0:8001
+# 启动服务，默认端口为8000
+python manage.py runserver 0.0.0.0:8000
 
 # 也可以使用gunicorn启动服务
-gunicorn --bind 0.0.0.0:8001  user-service.wsgi:application
+gunicorn --bind 0.0.0.0:8000  user-service.wsgi:application
 
 ```
