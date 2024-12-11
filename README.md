@@ -120,3 +120,13 @@ python manage.py runserver 0.0.0.0:8000
 gunicorn --bind 0.0.0.0:8000  user-service.wsgi:application
 
 ```
+浏览器访问：
+http://localhost:8000/
+首页如下:
+Welcome to use DWS API!
+[Customers](https://localhost:8000/customers)
+[Locations](https://localhost:8000/locations)
+[Orderitems](https://localhost:8000/orderitems)
+[Orders](https://localhost:8000/orders)
+[Products](https://localhost:8000/products)
+[Supplys](https://localhost:8000/supplys)
