@@ -28,8 +28,16 @@ resource-service-python/
 ```
 
 
+# 安装依赖
+```bash
+pip install --no-cache-dir -r requirements.txt
+pip install gunicorn
+
+```
+
+
 # 安装华为GaussDB Python驱动
-由于开源的psycopg2驱动，不兼容密码加密方式为2，需要使用华为的GaussDB Python驱动。
+由于开源的psycopg2驱动，不兼容DWS默认密码加密方式，需要使用华为的GaussDB Python驱动。
 ```bash
 # 华为云官网获取驱动包
 wget -O /tmp/GaussDB_driver.zip https://dbs-download.obs.cn-north-1.myhuaweicloud.com/GaussDB/1730887196055/GaussDB_driver.zip
@@ -54,10 +62,10 @@ pip uninstall -y $(pip list | grep psycopg2 | awk '{print $1}')
 chmod 755 $(python3 -c 'import site; print(site.getsitepackages()[0])')/psycopg2 -R
 
 # 将 psycopg2 目录添加到环境变量 $PYTHONPATH，并使之生效
-echo 'export PYTHONPATH="${PYTHONPATH}:$(python3 -c '\''import site; print(site.getsitepackages()[0])'\'')"' >> .venv/bin/activate
+export PYTHONPATH="${PYTHONPATH}:$(python3 -c 'import site; print(site.getsitepackages()[0])')"
 
 # 对于非数据库用户，需要将解压后的 lib 目录，配置在 LD_LIBRARY_PATH 中
-echo 'export LD_LIBRARY_PATH="/tmp/lib:$LD_LIBRARY_PATH"' >> .venv/bin/activate
+export LD_LIBRARY_PATH="/tmp/lib:$LD_LIBRARY_PATH"
 
 # 测试是否可以使用 psycopg2,没有报错即可
 python3
@@ -68,18 +76,8 @@ Type "help", "copyright", "credits" or "license" for more information.
 >>> exit()
 ```
 
-在项目根目录下执行以下命令安装插件
-```bash
-python3 -m venv .venv
-source .venv/bin/activate
-python3 -m pip install --upgrade pip
-pip install django
-
-```
-
-
-
 # 启动服务
+
 
 ```bash
 
@@ -90,8 +88,9 @@ python manage.py makemigrations django_dws
 python manage.py migrate django_dws
 
 # 启动服务，端口为8000
-python manage.py runserver 0.0.0.0:8000
+python manage.py runserver 0.0.0.0:8001
 
-# 也可以使用uwsgi启动服务
-uwsgi --http 0.0.0.0:8000 --module user-service.wsgi
+# 也可以使用gunicorn启动服务
+gunicorn --bind 0.0.0.0:8001  user-service.wsgi:application
+
 ```
