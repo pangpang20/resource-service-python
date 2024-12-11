@@ -89,13 +89,13 @@ DATABASES = {
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.getenv('DB_NAME', '${DB_HOST}'),
-        'USER': os.getenv('DB_USER', '${DB_NAME}'),
-        'PASSWORD': os.getenv('DB_PASSWORD', '${DB_PASS}'),
-        'HOST': os.getenv('DB_HOST', '${DB_HOST}'),
-        'PORT': os.getenv('DB_PORT', '${DB_PORT}'),
+        'NAME': os.getenv('DB_NAME'),
+        'USER': os.getenv('DB_USER'),
+        'PASSWORD': os.getenv('DB_PASSWORD'),
+        'HOST': os.getenv('DB_HOST'),
+        'PORT': os.getenv('DB_PORT'),
         'OPTIONS': {
-            'options': '-c search_path=${DB_SCHEMA},public'
+            'options': f'-c search_path={os.getenv("DB_SCHEMA")},public'
         },
     }
 }
